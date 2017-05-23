@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
 	if(rte_eal_mp_remote_launch(DpdkNicReceiveLoop, NULL, CALL_MASTER) < 0) { 
 		rte_exit(EXIT_FAILURE, "Failed to launch nic-receive-loop thread\n");
 	}
+	rte_log(RTE_LOG_INFO, RTE_LOGTYPE_EAL, "Remote launch ok!\n");
 	RTE_LCORE_FOREACH_SLAVE(lcore_id) {
 		if(rte_eal_wait_lcore(lcore_id) < 0) {
 			rte_exit(EXIT_FAILURE, "Failed to wait lcore\n");
