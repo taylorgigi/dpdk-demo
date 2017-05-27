@@ -7,7 +7,7 @@ ECHO=/usr/bin/echo
 PROGRAM_NAME=test
 PROGRAM_PATH=/home/ysm/dpdk-demo/build/${PROGRAM_NAME}
 
-CORE_MASK=ff
+CORE_MASK=f
 MASTER_LCORE_ID=1
 
 # check program file

@@ -3,7 +3,10 @@
 
 #include <stdint.h>
 #include <unistd.h>
+#include <inttypes.h>
 #include <rte_log.h>
+#include <rte_lcore.h>
+#include "nic-port.h"
 
 #ifdef __cplusplus
 extern "C" {
