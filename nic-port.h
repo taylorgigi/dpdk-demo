@@ -34,7 +34,7 @@ typedef struct DpdkNicRxQueue_ {
 	uint16_t rx_queue_id;
 	struct rte_eth_txconf tx_conf;
 	struct rte_mempool *pool;
-}__rte_cache_aligned DpdkNicRxQueue;
+} DpdkNicRxQueue;
 
 typedef struct DpdkNicTxQueue_ {
 	uint16_t port_id;
@@ -43,7 +43,7 @@ typedef struct DpdkNicTxQueue_ {
 	uint16_t tx_queue_id;
 	struct rte_eth_rxconf rx_conf;
 	struct rte_mempool *pool;
-}__rte_cache_aligned DpdkNicTxQueue;
+} DpdkNicTxQueue;
 
 typedef struct DpdkNicPort_ {
 	uint16_t port_id;
