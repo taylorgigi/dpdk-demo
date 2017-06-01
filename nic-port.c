@@ -30,7 +30,7 @@ static inline int DpdkNicRxQueueInit(DpdkNicRxQueue *rx_queue) {
 	rx_queue->socket_id = 0;
 	rx_queue->rx_queue_id = 0;
 	// rx_queue-> rx_conf = {};
-	rx_queue->pool = NULL;
+	//rx_queue->pool = NULL;
 
 	return 0;
 }
@@ -44,7 +44,7 @@ static inline int DpdkNicTxQueueInit(DpdkNicTxQueue *tx_queue) {
 	tx_queue->socket_id = 0;
 	tx_queue->tx_queue_id = 0;
 	// tx_queue-> tx_conf = {};
-	tx_queue->pool = NULL;
+	//tx_queue->pool = NULL;
 
 	return 0;
 }
@@ -90,11 +90,26 @@ inline int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_r
 		rte_log(RTE_LOG_ERR, RTE_LOGTYPE_MEMPOOL, "Error create mbuf mempool of port %u on socket %u", port_id, socketid);
 		return -1;
 	}
+  // create ring
+	snprintf(namebuf, 64, "ring-socket%u-port%u", socketid, port_id);
+  nicport->ring = rte_ring_create(namebuf,RING_MAX_COUNT, socketid, RING_F_SP_ENQ | RING_F_SC_DEQ);
+  if(nicport->ring == NULL) {
+    rte_log(RTE_LOG_ERR, RTE_LOGTYPE_RING, "Error create ring of port %u on socket %u", port_id, socketid);
+    rte_mempool_free(nicport->pool);
+    nicport->pool = NULL;
+    return -1;
+  }
 	// set up rx queue
 	for(q=0; q<nb_rx_queues; ++q) {
 		ret = rte_eth_rx_queue_setup(port_id, q, NB_RX_DESC, socketid, NULL, nicport->pool);
 		if(ret < 0) {
 			rte_log(RTE_LOG_ERR, RTE_LOGTYPE_PORT, "Error setup rx queue of port %u on socket %u", port_id, socketid);
+      // free ring
+      rte_ring_free(nicport->ring);
+      nicport->ring = NULL;
+      // free mempool
+      rte_mempool_free(nicport->pool);
+      nicport->pool = NULL;
 			return -1;
 		}
 	}
@@ -103,12 +118,24 @@ inline int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_r
 		ret = rte_eth_tx_queue_setup(port_id, q, NB_TX_DESC, socketid, NULL);
 		if(ret < 0) {
 			rte_log(RTE_LOG_ERR, RTE_LOGTYPE_PORT, "Error setup tx queue of port %u on socket %u", port_id, socketid);
+      // free ring
+      rte_ring_free(nicport->ring);
+      nicport->ring = NULL;
+      // free mempool
+      rte_mempool_free(nicport->pool);
+      nicport->pool = NULL;
 			return -1;
 		}
 	}
 	ret = rte_eth_dev_start(port_id);
 	if(ret < 0) {
 		rte_log(RTE_LOG_ERR, RTE_LOGTYPE_PORT, "Error start port %u on socket %u", port_id, socketid);
+    // free ring
+    rte_ring_free(nicport->ring);
+    nicport->ring = NULL;
+    // free mempool
+    rte_mempool_free(nicport->pool);
+    nicport->pool = NULL;
 		return -1;
 	}
 	// print port info

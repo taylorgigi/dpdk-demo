@@ -27,13 +27,15 @@ extern "C" {
 #define NIC_MAX_RX_QUEUES	NIC_MAX_QUEUES
 #define NIC_MAX_TX_QUEUES	NIC_MAX_QUEUES
 
+#define RING_MAX_COUNT    65536
+
 typedef struct DpdkNicRxQueue_ {
 	uint16_t port_id;
 	uint16_t lcore_id;
 	uint16_t socket_id;
 	uint16_t rx_queue_id;
 	struct rte_eth_txconf tx_conf;
-	struct rte_mempool *pool;
+	//struct rte_mempool *pool;
 } DpdkNicRxQueue;
 
 typedef struct DpdkNicTxQueue_ {
@@ -42,7 +44,7 @@ typedef struct DpdkNicTxQueue_ {
 	uint16_t socket_id;
 	uint16_t tx_queue_id;
 	struct rte_eth_rxconf rx_conf;
-	struct rte_mempool *pool;
+	//struct rte_mempool *pool;
 } DpdkNicTxQueue;
 
 typedef struct DpdkNicPort_ {
@@ -55,6 +57,7 @@ typedef struct DpdkNicPort_ {
 	struct rte_lpm *lpm;
 	struct rte_lpm6 *lpm6;
 	struct rte_ip_frag_tbl *frag_tbl;
+  struct rte_ring *ring;
 	DpdkNicRxQueue rx_queues[NIC_MAX_RX_QUEUES];
 	DpdkNicTxQueue tx_queues[NIC_MAX_TX_QUEUES];
 }__rte_cache_aligned DpdkNicPort;
