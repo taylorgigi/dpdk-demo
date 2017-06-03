@@ -20,8 +20,6 @@ extern "C" {
 #define NB_RX_DESC		32
 #define NB_TX_DESC		32
 
-#define BURST_PKTS        512
-
 #define DEFAULT_PKT_SIZE      1518
 
 // pktmbuf mempool
