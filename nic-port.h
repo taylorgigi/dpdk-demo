@@ -17,8 +17,9 @@ extern "C" {
 
 // mbuf mempool
 //#define MBUF_POOL_NUM		(1024*1024-1)
-#define MBUF_POOL_NUM		128
-#define MBUF_POOL_CACHE_SIZE	64
+#define MBUF_POOL_NUM         8192
+#define MBUF_POOL_CACHE_SIZE	0
+//#define MBUF_POOL_CACHE_SIZE	64
 
 #define NB_RX_DESC		32
 #define NB_TX_DESC		32
