@@ -1,5 +1,5 @@
-#ifndef NIC_PORT_
-#define NIC_PORT_
+#ifndef NIC_PORT_H
+#define NIC_PORT_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,20 +14,25 @@ extern "C" {
 #endif
 
 #define NIC_MAX_PORT		8
-
-// mbuf mempool
-//#define MBUF_POOL_NUM		(1024*1024-1)
-#define MBUF_POOL_NUM         8192
-#define MBUF_POOL_CACHE_SIZE	0
-//#define MBUF_POOL_CACHE_SIZE	64
-
-#define NB_RX_DESC		32
-#define NB_TX_DESC		32
-
 #define NIC_MAX_QUEUES		16
 #define NIC_MAX_RX_QUEUES	NIC_MAX_QUEUES
 #define NIC_MAX_TX_QUEUES	NIC_MAX_QUEUES
+#define NB_RX_DESC		32
+#define NB_TX_DESC		32
 
+#define BURST_PKTS        512
+
+#define DEFAULT_PKT_SIZE      1518
+
+// pktmbuf mempool
+#define MBUF_POOL_NUM         8192
+// RTE_MEMPOOL_CACHE_MAX_SIZE  is 512
+#define MBUF_POOL_CACHE_SIZE	RTE_MEMPOOL_CACHE_MAX_SIZE
+// 2k + RTE_PKTMBUF_HEADROOM bytes
+//#define MBUF_DATA_ROOM_SIZE   RTE_MBUF_DEFAULT_BUF_SIZE
+#define MBUF_DATA_ROOM_SIZE   (DEFAULT_PKT_SIZE +RTE_PKTMBUF_HEADROOM)
+
+// ring
 #define RING_MAX_COUNT    65536
 
 typedef struct DpdkNicRxQueue_ {

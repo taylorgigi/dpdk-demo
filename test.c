@@ -7,7 +7,6 @@ int main(int argc, char *argv[])
 {
 	int ret = 0;
 	uint32_t slave_lcore = 0;
-	uint32_t master_lcore = 0;
 	uint32_t lcore = 0;
 	uint16_t nb_ports = 0;
 	uint16_t port_id = 0;
@@ -33,7 +32,6 @@ int main(int argc, char *argv[])
   // to-do: launch other thread on slave lcore
 
   // launch nic-capture thread on master lcore. inside the callback func, it make a judgement if lcore is the master, if not so, return back.
-  master_lcore = rte_get_master_lcore();
   RTE_LCORE_FOREACH(lcore) { 
     if(!rte_lcore_is_enabled(lcore))
       continue;

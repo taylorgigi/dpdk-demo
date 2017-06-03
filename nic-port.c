@@ -69,7 +69,7 @@ inline int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_r
 	nicport->nb_tx_queues = nb_tx_queues;
 	nicport->port_id = port_id;
 	socketid = rte_eth_dev_socket_id(port_id);
-	if(socketid < 0) {
+	if(socketid == SOCKET_ID_ANY) {
 		socketid = 0;
 		//rte_log(RTE_LOG_ERR, RTE_LOGTYPE_PORT, "Get socket id error of port %u, out of range", port_id);
 		//return -1;
@@ -85,7 +85,7 @@ inline int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_r
 	// create mbuf mempool
 	char namebuf[64] = {0};
 	snprintf(namebuf, 64, "pool-socket%u-port%u", socketid, port_id);
-	nicport->pool = rte_pktmbuf_pool_create(namebuf, MBUF_POOL_NUM, MBUF_POOL_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE, socketid);
+	nicport->pool = rte_pktmbuf_pool_create(namebuf, MBUF_POOL_NUM, MBUF_POOL_CACHE_SIZE, 0, MBUF_DATA_ROOM_SIZE, socketid);
 	if(nicport->pool == NULL) {
 		rte_log(RTE_LOG_ERR, RTE_LOGTYPE_MEMPOOL, "Error create mbuf mempool of port %u on socket %u", port_id, socketid);
 		return -1;
