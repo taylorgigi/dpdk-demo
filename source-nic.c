@@ -27,8 +27,6 @@ int DpdkNicReceiveLoop(void *arg)
   struct timeval told;
   struct timeval tnow;
   uint32_t delay = 0;
-  int i;
-  struct rte_mbuf *mbuf = NULL;
 
   gettimeofday(&told, NULL);
 
