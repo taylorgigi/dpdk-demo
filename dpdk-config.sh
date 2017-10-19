@@ -3,21 +3,29 @@
 # command define
 RM=/bin/rm
 MKDIR=/bin/mkdir
-DPDK_DEVBIND=/home/ysm/dpdk-stable-16.11.1/tools/dpdk-devbind.py
+DPDK_DEVBIND=${RTE_SDK}/usertools/dpdk-devbind.py
 INSMOD=/sbin/insmod
 LSMOD=/sbin/lsmod
 MODPROBE=/sbin/modprobe
+DEPMOD=/sbin/depmod
 MOUNT=/bin/mount
 GREP=/bin/grep
 ECHO=/bin/echo
 IFCONFIG=/sbin/ifconfig
+UNAME=/bin/uname
 
 # hey, man, black hole file :)
 BLACK_HOLE=/dev/null
 
 HUGEPAGES=1024
 HUGEPAGE_DIR=/mnt/huge
-DEVICE=p2p1
+declare -a device_list
+declare -i device_num
+declare -i itr
+
+device_list=(enp0s8 enp0s9)
+device_num=2
+itr=0
 
 # hugepage setting
 ${ECHO} ${HUGEPAGES} > /proc/sys/vm/nr_hugepages
@@ -31,6 +39,7 @@ if [ ! -d ${HUGEPAGE_DIR} ];then
 	${MOUNT} -t hugetlbfs ${HUGEPAGE_DIR}
 fi
 
+${DEPMOD} /usr/lib/modules/`${UNAME} -r`/kernel/drivers/uio/uio.ko
 ${MODPROBE} uio
 # insert igb_uio mod
 if [ -z "`${LSMOD}|${GREP} igb_uio`" ];then
@@ -42,8 +51,12 @@ fi
 #fi
 
 # if device not bind to igb_uio, do it
-if [ -n "`${IFCONFIG} ${DEVICE} 2> ${BLACK_HOLE}`" ];then
-	${IFCONFIG} ${DEVICE} down
-	${DPDK_DEVBIND} --bind=igb_uio ${DEVICE}
-fi
+for ((itr=0; itr<$device_num; itr++ ))
+do
+	device=${device_list[$itr]}
+	if [ -n "`${IFCONFIG} ${device} 2> ${BLACK_HOLE}`" ];then
+		${IFCONFIG} ${device} down
+		${DPDK_DEVBIND} --bind=igb_uio ${device}
+	fi
+done
 

@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
 	nb_ports = rte_eth_dev_count();
   // initialize all ports
 	for(port_id = 0; port_id < nb_ports; ++port_id) {
-		ret = DpdkNicPortInit(port_id, &nic_ports[port_id], nb_rx_queues, nb_tx_queues);
-		if(ret < 0) {
+    ret = DpdkNicPortInit(port_id, &nic_ports[port_id], nb_rx_queues, nb_tx_queues);
+    if(ret < 0) {
 			rte_exit(EXIT_FAILURE, "Failed to initialize port %u\n", port_id);
 		}
 	}
