@@ -5,7 +5,8 @@ PKILL=/usr/bin/pkill
 ECHO=/usr/bin/echo
 
 PROGRAM_NAME=test
-PROGRAM_PATH=/home/ysm/dpdk-demo/build/${PROGRAM_NAME}
+#PROGRAM_PATH=/home/ysm/dpdk-demo/build/${PROGRAM_NAME}
+PROGRAM_PATH=../build/${PROGRAM_NAME}
 
 CORE_MASK=f
 MASTER_LCORE_ID=1

@@ -3,7 +3,8 @@
 # command define
 RM=/bin/rm
 MKDIR=/bin/mkdir
-DPDK_DEVBIND=${RTE_SDK}/usertools/dpdk-devbind.py
+#DPDK_DEVBIND=${RTE_SDK}/usertools/dpdk-devbind.py
+DPDK_DEVBIND=${RTE_SDK}/tools/dpdk-devbind.py
 INSMOD=/sbin/insmod
 LSMOD=/sbin/lsmod
 MODPROBE=/sbin/modprobe
@@ -23,12 +24,14 @@ declare -a device_list
 declare -i device_num
 declare -i itr
 
-device_list=(enp0s8 enp0s9)
-device_num=2
+#device_list=(enp0s8 enp0s9)
+device_list=(p2p1)
+device_num=1
 itr=0
 
 # hugepage setting
-${ECHO} ${HUGEPAGES} > /proc/sys/vm/nr_hugepages
+#${ECHO} ${HUGEPAGES} > /proc/sys/vm/nr_hugepages
+${ECHO} ${HUGEPAGES} > /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages
 
 # mount hugetlbfs
 if [ ! -d ${HUGEPAGE_DIR} ];then
@@ -46,9 +49,9 @@ if [ -z "`${LSMOD}|${GREP} igb_uio`" ];then
 	${INSMOD} ${RTE_SDK}/${RTE_TARGET}/kmod/igb_uio.ko
 fi
 # insert rte_kni mod
-#if [ -z "`${LSMOD}|${GREP} rte_kni`" ];then
-#	${INSMOD} ${RTE_SDK}/${RTE_TARGET}/kmod/rte_kni.ko
-#fi
+if [ -z "`${LSMOD}|${GREP} rte_kni`" ];then
+	${INSMOD} ${RTE_SDK}/${RTE_TARGET}/kmod/rte_kni.ko kthread_mode=multiple
+fi
 
 # if device not bind to igb_uio, do it
 for ((itr=0; itr<$device_num; itr++ ))
