@@ -146,9 +146,10 @@ inline int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_r
 	if(link.link_status == ETH_LINK_UP) {
 		struct ether_addr addr;
 		rte_eth_macaddr_get(port_id, &addr);
-		printf("Port %u is up MAC: %02"PRIx8" %02"PRIx8" %02"PRIx8
-                        " %02"PRIx8" %02"PRIx8" %02"PRIx8"\n",
+		printf("Port %u is Link Up speed %u %s Mbps MAC: %02"PRIx8":%02"PRIx8" %02"PRIx8":%02"PRIx8":%02"PRIx8":%02"PRIx8"\n",
                         port_id,
+                        link.link_speed,
+                        (link.link_duplex == ETH_LINK_FULL_DUPLEX) ? "Full-Duplex":"Half-Duplex",
                         addr.addr_bytes[0], addr.addr_bytes[1],
                         addr.addr_bytes[2], addr.addr_bytes[3],
                         addr.addr_bytes[4], addr.addr_bytes[5]);
