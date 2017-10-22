@@ -19,6 +19,7 @@ declare -a device_list
 declare -i device_num
 declare -i itr
 
+program=$0
 device_list=($*)
 device_num=$#
 itr=0
@@ -72,8 +73,8 @@ pktgen_launch() {
 
 pktgen_check_args() {
 	if [ $device_num -eq 0 ];then
-		${ECHO} "$0 <interface-name1> [<interface-name2>] ... [<interface-nameN>]"
-		${ECHO} "Example: " $0 p2p1 p2p3
+		${ECHO} "${program} <interface-name1> [<interface-name2>] ... [<interface-nameN>]"
+		${ECHO} "Example: " ${program} p2p1 p2p3
 		exit 0
 	fi
 }
