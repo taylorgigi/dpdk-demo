@@ -61,7 +61,7 @@ typedef struct DpdkNicPort_ {
 	struct rte_lpm *lpm;
 	struct rte_lpm6 *lpm6;
 	struct rte_ip_frag_tbl *frag_tbl;
-  struct rte_ring *ring;
+	struct rte_ring *ring;
 	DpdkNicRxQueue rx_queues[NIC_MAX_RX_QUEUES];
 	DpdkNicTxQueue tx_queues[NIC_MAX_TX_QUEUES];
 }__rte_cache_aligned DpdkNicPort;
