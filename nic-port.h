@@ -66,7 +66,7 @@ typedef struct DpdkNicPort_ {
 	DpdkNicTxQueue tx_queues[NIC_MAX_TX_QUEUES];
 }__rte_cache_aligned DpdkNicPort;
 
-inline int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_rx_queues, uint16_t nb_tx_queues);
+int DpdkNicPortInit(uint16_t port_id, DpdkNicPort *nicport, uint16_t nb_rx_queues, uint16_t nb_tx_queues);
 
 #ifdef __cplusplus
 }

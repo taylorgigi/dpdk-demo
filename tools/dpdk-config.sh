@@ -1,10 +1,11 @@
 #!/bin/bash
 
+#================================ dpdk-stable-18.02.2 version ================================
 # command define
 RM=/bin/rm
 MKDIR=/bin/mkdir
-#DPDK_DEVBIND=${RTE_SDK}/usertools/dpdk-devbind.py
-DPDK_DEVBIND=${RTE_SDK}/tools/dpdk-devbind.py
+DPDK_DEVBIND=${RTE_SDK}/usertools/dpdk-devbind.py
+#DPDK_DEVBIND=${RTE_SDK}/tools/dpdk-devbind.py
 INSMOD=/sbin/insmod
 LSMOD=/sbin/lsmod
 MODPROBE=/sbin/modprobe
@@ -18,7 +19,7 @@ UNAME=/bin/uname
 # hey, man, black hole file :)
 BLACK_HOLE=/dev/null
 
-HUGEPAGES=1024
+HUGEPAGES=512
 HUGEPAGE_DIR=/mnt/huge
 declare -a device_list
 declare -i device_num
@@ -36,17 +37,18 @@ dpdk_hugetable_set() {
 	${ECHO} ${HUGEPAGES} > /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages
 
 	# mount hugetlbfs
+	${RM} -rf ${HUGEPAGE_DIR}
 	if [ ! -d ${HUGEPAGE_DIR} ];then
 		if [ -f ${HUGEPAGE_DIR} ];then
 			${RM} ${HUGEPAGE_DIR}
 		fi
 		${MKDIR} -p ${HUGEPAGE_DIR}
-		${MOUNT} -t hugetlbfs ${HUGEPAGE_DIR}
+		${MOUNT} -t hugetlbfs nodev ${HUGEPAGE_DIR}
 	fi
 }
 
 dpdk_insert_igb_uio() {
-	${DEPMOD} /usr/lib/modules/`${UNAME} -r`/kernel/drivers/uio/uio.ko
+	#${DEPMOD} /lib/modules/`${UNAME} -r`/kernel/drivers/uio/uio.ko
 	${MODPROBE} uio
 	# insert igb_uio mod
 	if [ -z "`${LSMOD}|${GREP} igb_uio`" ];then
